@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const clearBackgroundBtn = document.getElementById("clearBackground");
   const backgroundInput = document.getElementById("backgroundInput");
   const documentationLink = document.getElementById("documentationLink");
+  const widgetModal = document.getElementById("widgetPickerModal");
+  const widgetOptions = document.querySelectorAll(".widget-option");
 
   const API_KEY = "8b452084f73dfdd0a57fe89ebceef204";
 
@@ -262,11 +264,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+    // Open modal on "+" click
   addWidgetBtn.addEventListener("click", () => {
-    const type = prompt("Enter widget type (weather, clock, battery):", "weather");
-    if (!type) return;
-    addWidget(type.toLowerCase());
+    widgetModal.classList.remove("hidden");
   });
+
+  // Close modal on widget selection
+  widgetOptions.forEach(option => {
+    option.addEventListener("click", () => {
+      const type = option.getAttribute("data-type");
+      addWidget(type);
+      widgetModal.classList.add("hidden");
+    });
+  });
+
+  // Optional: click outside to close modal
+  widgetModal.addEventListener("click", (e) => {
+    if (e.target === widgetModal) {
+      widgetModal.classList.add("hidden");
+    }
+  });
+
+  // addWidgetBtn.addEventListener("click", () => {
+  //   const type = prompt("Enter widget type (weather, clock, battery):", "weather");
+  //   if (!type) return;
+  //   addWidget(type.toLowerCase());
+  // });
 
   function addRemoveListener(widgetItem) {
     const removeBtn = widgetItem.querySelector(".widget-remove");
