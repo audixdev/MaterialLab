@@ -1,0 +1,247 @@
+/* Material You / Pixel-inspired color scheme and dynamic variables */
+:root {
+  --backgroundColor: #121212;
+  --surfaceColor: #1F1B24;
+  --primaryColor: #d3d3d3;
+  --secondaryColor: #777777;
+  --onPrimaryColor: #000000;
+  --onSurfaceColor: #ffffff;
+  --widgetBackground: #292929;
+  /* New variable for header background */
+  --headerColor: var(--surfaceColor);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* Prevent scrollbars from interfering */
+  overflow: hidden;
+}
+
+body,
+html {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  /* The full background image is applied to the body */
+  background-color: var(--backgroundColor);
+  color: var(--onSurfaceColor);
+  transition: background-image 0.5s ease, background-color 0.5s ease;
+}
+
+/* Header styling with rounded corners and top margin */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px;  /* provides space on top and sides */
+  padding: 1rem;
+  border-radius: 16px;
+  background-color: var(--headerColor);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+header .material-icons {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Main layout styling */
+main {
+  display: flex;
+  height: calc(100vh - 80px);
+}
+
+/* The editor container is set to relative so that its children (widgets) can be absolutely positioned. */
+.editor-container {
+  flex: 2;
+  position: relative;
+  background: transparent;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.widget-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Widget styling in Pixel-style – absolutely positioned */
+.widget {
+  position: absolute;
+  background-color: var(--widgetBackground);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  user-select: none;
+  transition: transform 0.2s ease;
+  resize: both;
+}
+
+.widget:active {
+  transform: scale(0.98);
+}
+
+/* Widget header styling */
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background-color: var(--primaryColor);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.widget-title {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--onPrimaryColor);
+}
+
+.widget-icon {
+  margin-right: 4px;
+}
+
+/* Remove button styling */
+.widget-remove {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--onPrimaryColor);
+  margin-right: 4px;
+}
+
+/* Drag handle icon styling */
+.widget-drag-handle {
+  font-size: 2rem;
+  cursor: move;
+  color: var(--onPrimaryColor);
+}
+
+/* Widget content styling */
+.widget-content {
+  padding: 1rem;
+  color: var(--onSurfaceColor);
+}
+
+/* Action button styling */
+.action-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primaryColor);
+  border: none;
+  color: var(--onPrimaryColor);
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: var(--secondaryColor);
+}
+
+/* Responsive Design for Mobile */
+@media screen and (max-width: 768px) {
+  /* Adjust header styling for smaller screens */
+  header {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.5rem;
+    margin: 8px;
+    border-radius: 12px;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .version {
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+
+  header .material-icons {
+    font-size: 1.6rem;
+    margin: 4px;
+  }
+
+  /* Adjust main content layout */
+  main {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .editor-container {
+    padding: 0.5rem;
+  }
+
+  /* Make widgets smaller for better mobile interaction */
+  .widget {
+    width: 140px;
+    padding: 0.4rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+
+  .widget-header {
+    padding: 0.3rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .widget-title {
+    font-size: 0.85rem;
+  }
+
+  .widget-icon {
+    font-size: 1.2rem;
+    margin-right: 3px;
+  }
+
+  .widget-remove,
+  .widget-drag-handle {
+    font-size: 1.2rem;
+  }
+
+  .widget-content {
+    padding: 0.4rem;
+  }
+
+  /* Ensure widgets remain draggable by adjusting positioning */
+  .widget {
+    min-width: 220px;
+    min-height: 80px;
+    touch-action: none;
+    position: static;
+    margin: 8px auto; /* center with margin */
+  }
+
+  .widget-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* or center if you want vertical centering */
+    position: relative;
+  }
+
+
+  /* Adjust button sizes */
+  .action-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 16px;
+  }
+
+  .action-btn:hover {
+    background-color: var(--secondaryColor);
+  }
+}

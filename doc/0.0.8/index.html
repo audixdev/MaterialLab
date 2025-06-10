@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MaterialLab Documentation</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f7f7f7;
+      color: #333;
+      max-width: 960px;
+      margin: auto;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    .material-icons {
+      font-size: 1em;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+    code {
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    .icon-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📘 MaterialLab Playground Documentation</h1>
+  <p>Version: <strong>v0.0.8-rc</strong></p>
+  <p>This is a browser-based drag-and-drop widget playground with theme customization and persistent background support.</p>
+
+  <section>
+    <h2>🎛 UI Elements</h2>
+    <div class="icon-label"><span class="material-icons">add_circle</span> <strong>Add Widget:</strong> Prompts for a widget type (weather, clock, battery).</div>
+    <div class="icon-label"><span class="material-icons">upload_file</span> <strong>Upload Background:</strong> Opens file picker to set a custom background image.</div>
+    <div class="icon-label"><span class="material-icons">delete</span> <strong>Clear Background:</strong> Removes the current background and theme palette.</div>
+  </section>
+
+  <section>
+    <h2>🧩 Widgets</h2>
+    <p>Widgets are draggable elements with headers and content. Supported types:</p>
+    <ul>
+      <li><strong>Weather:</strong> Displays temperature and weather for <code>Leiden</code> using OpenWeatherMap API.</li>
+      <li><strong>Clock:</strong> Digital clock that updates every second.</li>
+      <li><strong>Battery:</strong> Static battery percentage placeholder (future: dynamic status).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🖼 Background Support</h2>
+    <p>Users can upload an image as a full-screen background:</p>
+    <ul>
+      <li>Image is scaled down for performance (<code>max 1920x1680</code>).</li>
+      <li>Saved in <code>localStorage</code> as JPEG Data URL.</li>
+      <li>Image is styled as <code>cover</code> with <code>center</code> alignment.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🎨 Dynamic Theme Palette</h2>
+    <p>Based on the uploaded background image:</p>
+    <ul>
+      <li>Extracts an average color from the image.</li>
+      <li>Generates primary, secondary, header, and contrast text colors.</li>
+      <li>Applies them via CSS variables:</li>
+    </ul>
+    <pre><code>--primaryColor
+--secondaryColor
+--onPrimaryColor
+--headerColor</code></pre>
+    <p>Saved to <code>localStorage</code> for persistence.</p>
+  </section>
+
+  <section>
+    <h2>🖱 Drag & Drop</h2>
+    <p>Widgets can be freely moved around using the <code>drag_indicator</code> icon.</p>
+    <ul>
+      <li>Position is absolute within the widget container.</li>
+      <li>Draggable functionality is initialized on widget creation.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>🗑 Remove Widget</h2>
+    <p>Each widget has a <code>delete</code> icon to remove it from the DOM.</p>
+  </section>
+
+  <section>
+    <h2>💾 Persistence</h2>
+    <p>The following are saved and restored automatically:</p>
+    <ul>
+      <li><code>backgroundImage</code> (JPEG data URL)</li>
+      <li><code>themePalette</code> (JSON with color values)</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📡 Weather API</h2>
+    <p>Uses <a href="https://openweathermap.org/api" target="_blank">OpenWeatherMap</a> to fetch real-time weather.</p>
+    <p><strong>API Key Required:</strong> Replace <code>API_KEY</code> in JavaScript with your own.</p>
+  </section>
+
+  <section>
+    <h2>🧭 Planned Features (Future)</h2>
+    <ul>
+      <li>Live battery status via <code>navigator.getBattery()</code></li>
+      <li>Widget saving/loading state</li>
+      <li>Resizable widgets</li>
+      <li>Custom widget types / plugins</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p><em>MaterialLab v0.0.8-rc – Made for experimenting and customization lovers.</em></p>
+  </footer>
+
+</body>
+</html>

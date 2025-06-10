@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MaterialLab</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" 
+        href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+</head>
+<body>
+  <header>
+    <h1 class="logo">MaterialLab Playground</h1>
+    <!-- Small text with version and rc -->
+    <span class="version">v0.0.8-rc</span>
+    <!-- Add Widget button launches a prompt to choose widget type -->
+     <span class="material-icons" id="addWidget">add_circle</span>
+    <!-- Clicking this icon opens the background selector -->
+    <span class="material-icons" id="fileManager">upload_file</span>
+    <!-- Clear Background Button -->
+     <span class="material-icons" id="clearBackground">delete</span>
+     <!-- Documentation -->
+    <span class="material-icons" id="documentationLink">help_outline</span>
+    <!-- Hidden file input used for background selection -->
+    <input type="file" id="backgroundInput" accept="image/*" style="display: none;" />
+  </header>
+
+  <main>
+    <section class="editor-container">
+      <div id="widgetContainer" class="widget-container">
+        <!-- Example draggable widget (default type: weather) -->
+        <!-- <div class="widget" data-type="weather" id="widget1" style="left: 400px; top: 20px;">
+          <div class="widget-header">
+            <span class="widget-title">
+              <i class="material-icons widget-icon">wb_sunny</i>
+              Weather
+            </span>
+            <span class="material-icons widget-remove">delete</span>
+            <span class="material-icons widget-drag-handle">drag_indicator</span>
+          </div>
+          <div class="widget-content">
+            <p>25°C, Clear Sky</p>
+          </div>
+        </div> -->
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
