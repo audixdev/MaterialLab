@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Documentation link click handler
   documentationLink.addEventListener("click", (e) => {
     e.preventDefault();
-    window.open("/doc/", "_blank");
+    window.open("doc/", "_blank");
   }
   );
   //---------------------------
