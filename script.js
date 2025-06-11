@@ -7,13 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const documentationLink = document.getElementById("documentationLink");
   const widgetModal = document.getElementById("widgetPickerModal");
   const widgetOptions = document.querySelectorAll(".widget-option");
+  const savedWidgets = localStorage.getItem("widgets");
+  const savedBg = localStorage.getItem("backgroundImage");
+  const savedTheme = localStorage.getItem("themePalette");
 
   const API_KEY = "8b452084f73dfdd0a57fe89ebceef204";
 
   //---------------------------
   // INIT: Load saved background and theme palette
   //---------------------------
-  const savedBg = localStorage.getItem("backgroundImage");
   if (savedBg) {
     document.body.style.backgroundImage = `url(${savedBg})`;
     document.body.style.backgroundSize = "cover";
@@ -242,6 +244,38 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="material-icons widget-drag-handle">drag_indicator</span>
         </div>
         <div class="widget-content"><p>85%</p></div>`;
+    } else if (type === "quote") {
+      widgetHTML = `
+    <div class="widget-header">
+      <span class="widget-title"><i class="material-icons widget-icon">format_quote</i> Quote</span>
+      <span class="material-icons widget-remove">delete</span>
+      <span class="material-icons widget-drag-handle">drag_indicator</span>
+    </div>
+    <div class="widget-content" id="${id}">
+      <p>Loading quote...</p>
+    </div>`;
+    } else if (type === "todo") {
+      widgetHTML = `
+    <div class="widget-header">
+      <span class="widget-title"><i class="material-icons widget-icon">note_add</i> Todo List</span>
+      <span class="material-icons widget-remove">delete</span>
+      <span class="material-icons widget-drag-handle">drag_indicator</span>
+    </div>
+    <div class="widget-content todo-content">
+      <input type="text" placeholder="New task..." class="todo-input" />
+      <button class="todo-add-btn">Add</button>
+      <ul class="todo-list"></ul>
+    </div>`;
+    } else if (type === "calendar") {
+      widgetHTML = `
+    <div class="widget-header">
+      <span class="widget-title"><i class="material-icons widget-icon">calendar_today</i> Calendar</span>
+      <span class="material-icons widget-remove">delete</span>
+      <span class="material-icons widget-drag-handle">drag_indicator</span>
+    </div>
+    <div class="widget-content calendar-content">
+      <p id="${id}">Loading date...</p>
+    </div>`;
     } else {
       alert("Unknown widget type.");
       return;
@@ -262,9 +296,85 @@ document.addEventListener("DOMContentLoaded", () => {
       const weatherContent = newWidget.querySelector(".widget-content");
       fetchWeather(weatherContent, "Leiden");
     }
+
+    if (type === "quote") {
+      fetchRandomQuote(newWidget.querySelector(".widget-content"));
+    } 
+    
+    if (type === "todo") {
+      setupTodoWidget(newWidget);
+    } 
+    
+    if (type === "calendar") {
+      updateCalendar(newWidget.querySelector(".widget-content > p"));
+    }
+
+    // Quote widget: Fetch random quote from API
+    function fetchRandomQuote(container) {
+      fetch("https://api.api-ninjas.com/v1/quotes", {
+        headers: {
+          "X-Api-Key": "pzlkjFzVxQH3eKcqFHxXRw==gJa3T99NWM6TQceI"
+        }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Network response was not ok');
+          return res.json();
+        })
+        .then(data => {
+          // The API returns an array of quotes
+          if (data && data.length > 0) {
+            const quote = data[0];
+            container.innerHTML = `<blockquote>"${quote.quote}"</blockquote><footer>— ${quote.author}</footer>`;
+          } else {
+            container.innerHTML = `<p>No quotes found.</p>`;
+          }
+        })
+        .catch(() => {
+          container.innerHTML = `<p>Could not load quote.</p>`;
+        });
+    }
+
+
+    // Todo widget setup: add event listeners and simple local state per widget
+    function setupTodoWidget(widget) {
+      const input = widget.querySelector(".todo-input");
+      const addBtn = widget.querySelector(".todo-add-btn");
+      const list = widget.querySelector(".todo-list");
+      let todos = [];
+
+      function renderTodos() {
+        list.innerHTML = todos.map((task, i) =>
+          `<li>${task} <span class="material-icons todo-remove" data-index="${i}">close</span></li>`
+        ).join("");
+      }
+
+      addBtn.addEventListener("click", () => {
+        const val = input.value.trim();
+        if (!val) return;
+        todos.push(val);
+        input.value = "";
+        renderTodos();
+      });
+
+      list.addEventListener("click", (e) => {
+        if (e.target.classList.contains("todo-remove")) {
+          const idx = parseInt(e.target.dataset.index, 10);
+          todos.splice(idx, 1);
+          renderTodos();
+        }
+      });
+    }
+
+    // Calendar widget: just show today's date
+    function updateCalendar(container) {
+      const today = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      container.textContent = today.toLocaleDateString(undefined, options);
+    }
+
   }
 
-    // Open modal on "+" click
+  // Open modal on "+" click
   addWidgetBtn.addEventListener("click", () => {
     widgetModal.classList.remove("hidden");
   });
@@ -347,4 +457,88 @@ document.addEventListener("DOMContentLoaded", () => {
   // INIT: LOAD SAVED WIDGETS
   //---------------------------
   loadWidgetsFromLocalStorage();
+
+  // Export layout button
+  document.getElementById("exportLayout").addEventListener("click", () => {
+    const layoutData = {
+      widgets: savedWidgets ? JSON.parse(savedWidgets) : [],
+      background: {
+        image: savedBg || "",
+        theme: savedTheme ? JSON.parse(savedTheme) : {}
+      }
+    };
+    const blob = new Blob([JSON.stringify(layoutData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "layout.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Import layout button (open file dialog)
+  document.getElementById("importLayoutTrigger").addEventListener("click", () => {
+    document.getElementById("importLayoutInput").click();
+  });
+
+  function renderWidgetsFromData(widgets) {
+    // Clear existing widgets first
+    widgetContainer.innerHTML = "";
+    widgets.forEach(w => {
+      addWidget(w.type, w.left, w.top);
+    });
+  }
+
+  function applyBackgroundConfig(bgConfig) {
+    if (bgConfig.image) {
+      document.body.style.backgroundImage = `url(${bgConfig.image})`;
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+      localStorage.setItem("backgroundImage", bgConfig.image);
+    } else {
+      document.body.style.backgroundImage = "";
+      localStorage.removeItem("backgroundImage");
+    }
+
+    if (bgConfig.theme) {
+      try {
+        localStorage.setItem("themePalette", JSON.stringify(bgConfig.theme));
+        const theme = bgConfig.theme;
+        document.documentElement.style.setProperty("--primaryColor", theme.primary);
+        document.documentElement.style.setProperty("--secondaryColor", theme.secondary);
+        document.documentElement.style.setProperty("--onPrimaryColor", theme.onPrimary);
+        document.documentElement.style.setProperty("--headerColor", theme.header);
+      } catch {
+        console.warn("Error applying theme on import");
+      }
+    }
+  }
+
+
+  // Import layout input (read JSON)
+  document.getElementById("importLayoutInput").addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.widgets) {
+          renderWidgetsFromData(data.widgets);
+          localStorage.setItem("widgets", JSON.stringify(data.widgets)); // sync storage
+        }
+        if (data.background) {
+          applyBackgroundConfig(data.background);
+        }
+      } catch (err) {
+        alert("Invalid layout file.");
+        console.error(err);
+      }
+    };
+    reader.readAsText(file);
+  });
+
+
 });
