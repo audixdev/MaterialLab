@@ -1,0 +1,30 @@
+{
+  "name": "materiallab",
+  "version": "1.0.0",
+  "description": "This is a browser-based drag-and-drop widget playground with theme customization and persistent background support.",
+  "main": "script.js",
+  "type": "module",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/audixdev/MaterialLab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/audixdev/MaterialLab/issues"
+  },
+  "homepage": "https://github.com/audixdev/MaterialLab#readme",
+  "dependencies": {
+    "@google/genai": "^1.5.1",
+    "@google/generative-ai": "^0.24.1",
+    "express": "^5.1.0"
+  }
+}

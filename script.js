@@ -276,7 +276,22 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="widget-content calendar-content">
       <p id="${id}">Loading date...</p>
     </div>`;
-    } else {
+    } else if (type === "ai") {
+      widgetHTML = `
+  <div class="widget-header">
+    <span class="widget-title"><i class="material-icons widget-icon">smart_toy</i> MaterialAI v0.1</span>
+    <span class="material-icons widget-remove">delete</span>
+    <span class="material-icons widget-drag-handle">drag_indicator</span>
+  </div>
+  <div class="widget-content ai-content">
+    <div class="chat-box" id="chatBox_${id}"></div>
+    <div class="chat-input">
+      <input type="text" placeholder="Ask something..." class="chat-user-input" id="chatInput_${id}" />
+      <button class="chat-send-btn" data-chatboxid="${id}">Send</button>
+    </div>
+  </div>`;
+    }
+    else {
       alert("Unknown widget type.");
       return;
     }
@@ -299,12 +314,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (type === "quote") {
       fetchRandomQuote(newWidget.querySelector(".widget-content"));
-    } 
-    
+    }
+
     if (type === "todo") {
       setupTodoWidget(newWidget);
-    } 
-    
+    }
+
     if (type === "calendar") {
       updateCalendar(newWidget.querySelector(".widget-content > p"));
     }
@@ -446,6 +461,83 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Weather API error:", err);
         widgetElement.innerHTML = `<p>Error loading weather</p>`;
       });
+
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('chat-send-btn')) {
+        const chatboxId = e.target.dataset.chatboxid;
+        const inputEl = document.getElementById(`chatInput_${chatboxId}`);
+        const chatBoxEl = document.getElementById(`chatBox_${chatboxId}`);
+        const userText = inputEl.value.trim();
+        if (!userText) return;
+
+        // Append user message with consistent styling
+        chatBoxEl.innerHTML += `
+      <div class="chat-message user" style="
+        background: var(--primaryColor);
+        color: var(--onPrimaryColor);
+        padding: 10px 14px;
+        border-radius: 16px 16px 0 16px;
+        max-width: 70%;
+        margin-left: auto;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        word-wrap: break-word;
+      ">🧑 ${userText}</div>`;
+
+        inputEl.value = "";
+
+        // Append loading message with subtle animation
+        chatBoxEl.innerHTML += `
+      <div class="chat-message ai loading" style="
+        background: var(--widgetBackground);
+        color: var(--secondaryColor);
+        padding: 10px 14px;
+        border-radius: 16px 16px 16px 0;
+        max-width: 70%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        word-wrap: break-word;
+        font-style: italic;
+      ">🤖 Thinking...</div>`;
+
+        // Scroll to bottom for new message
+        chatBoxEl.scrollTop = chatBoxEl.scrollHeight;
+
+        try {
+          const res = await fetch('http://localhost:3030/api/ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: userText })
+          });
+          const data = await res.json();
+          const allMessages = chatBoxEl.querySelectorAll('.chat-message.ai.loading');
+          if (allMessages.length) {
+            allMessages[allMessages.length - 1].innerHTML = `
+          🤖 ${data.reply}
+        `;
+            allMessages[allMessages.length - 1].style.color = "var(--onSurfaceColor)";
+            allMessages[allMessages.length - 1].style.fontStyle = "normal";
+            allMessages[allMessages.length - 1].style.background = "var(--widgetBackground)";
+            allMessages[allMessages.length - 1].style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+            allMessages[allMessages.length - 1].classList.remove('loading');
+          }
+          chatBoxEl.scrollTop = chatBoxEl.scrollHeight;
+        } catch (err) {
+          console.error(err);
+          chatBoxEl.innerHTML += `
+        <div class="chat-message ai" style="
+          background: #ff5555;
+          color: #fff;
+          padding: 10px 14px;
+          border-radius: 16px 16px 16px 0;
+          max-width: 70%;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+          word-wrap: break-word;
+        ">⚠️ Error getting response.</div>
+      `;
+          chatBoxEl.scrollTop = chatBoxEl.scrollHeight;
+        }
+      }
+    });
+
   }
 
   documentationLink.addEventListener("click", (e) => {
