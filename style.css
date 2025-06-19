@@ -1,164 +1,292 @@
-/* Material You / Pixel-inspired color scheme and dynamic variables */
+/* Enhanced One UI inspired style with refined depth and smoothness */
 :root {
-  --backgroundColor: #121212;
-  --surfaceColor: #1F1B24;
-  --primaryColor: #d3d3d3;
-  --secondaryColor: #777777;
-  --onPrimaryColor: #000000;
-  --onSurfaceColor: #ffffff;
-  --widgetBackground: #292929;
-  /* New variable for header background */
-  --headerColor: var(--surfaceColor);
+  --backgroundColor: #F2F3F7;
+  --surfaceColor: rgba(255, 255, 255, 0.85); /* translucent white */
+  --primaryColor: #1877F2;
+  --primaryColorHover: #145dbf;
+  --secondaryColor: #90A0B8;
+  --onPrimaryColor: #FFFFFF;
+  --onSurfaceColor: #1C1C1E;
+  --widgetBackground: rgba(255, 255, 255, 0.9);
+  --headerColor: rgba(255, 255, 255, 0.95);
+  --shadowLight: rgba(24, 119, 242, 0.12);
+  --shadowDark: rgba(28, 28, 30, 0.15);
+  --borderRadiusLarge: 28px;
+  --borderRadiusMedium: 20px;
+  --borderRadiusSmall: 16px;
+  --transitionSpeed: 0.35s;
+  --fontFamilyPrimary: "SamsungOne", "Segoe UI", "Roboto", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  /* Prevent scrollbars from interfering */
   overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body,
 html {
   height: 100%;
-  font-family: 'Roboto', sans-serif;
-  /* The full background image is applied to the body */
+  font-family: var(--fontFamilyPrimary);
   background-color: var(--backgroundColor);
   color: var(--onSurfaceColor);
-  transition: background-image 0.5s ease, background-color 0.5s ease;
+  transition: background-color var(--transitionSpeed) ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Header styling with rounded corners and top margin */
+/* Header with translucency and subtle layered shadow */
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 16px;  /* provides space on top and sides */
-  padding: 1rem;
-  border-radius: 16px;
+  margin: 16px;
+  padding: 1.5rem 2rem;
+  border-radius: var(--borderRadiusLarge);
   background-color: var(--headerColor);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow:
+    0 2px 6px var(--shadowLight),
+    0 10px 24px var(--shadowDark);
+  user-select: none;
+  font-weight: 600;
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--onSurfaceColor);
+  user-select: text;
+  user-drag: none;
+}
+
+.version {
+  font-size: 0.95rem;
+  color: var(--secondaryColor);
+  font-weight: 500;
+  margin-left: 1rem;
+  user-select: none;
 }
 
 header .material-icons {
-  font-size: 2rem;
+  font-size: 2.4rem;
   cursor: pointer;
+  color: var(--primaryColor);
+  transition: color var(--transitionSpeed) ease, transform 0.2s ease;
+  margin-left: 1rem;
+  user-select: none;
+  user-drag: none;
 }
 
-/* Main layout styling */
+header .material-icons:hover,
+header .material-icons:focus {
+  color: var(--primaryColorHover);
+  transform: scale(1.15);
+  outline: none;
+}
+
+header .material-icons:active {
+  transform: scale(0.95);
+}
+
+/* Main container */
 main {
   display: flex;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 96px);
+  padding: 0 1rem 1rem 1rem;
 }
 
-/* The editor container is set to relative so that its children (widgets) can be absolutely positioned. */
+/* Editor container with more padding and smooth scrolling */
 .editor-container {
   flex: 2;
   position: relative;
   background: transparent;
-  padding: 1rem;
+  padding: 1.75rem 2.5rem;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primaryColor) transparent;
 }
 
+.editor-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editor-container::-webkit-scrollbar-thumb {
+  background-color: var(--primaryColor);
+  border-radius: 20px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* Widget container full size */
 .widget-container {
   width: 100%;
   height: 100%;
 }
 
-/* Widget styling in Pixel-style – absolutely positioned */
+/* Widget card with glass effect, smooth shadows, and refined spacing */
 .widget {
   position: absolute;
   background-color: var(--widgetBackground);
-  border-radius: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 250px;
+  backdrop-filter: saturate(150%) blur(15px);
+  border-radius: var(--borderRadiusLarge);
+  box-shadow:
+    0 8px 16px rgba(24, 119, 242, 0.12),
+    0 16px 32px rgba(28, 28, 30, 0.1);
+  width: 260px;
   user-select: none;
-  transition: transform 0.2s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.3s ease,
+    background-color var(--transitionSpeed) ease;
   resize: both;
+  padding: 1.25rem 1.5rem;
+  font-weight: 500;
+  color: var(--onSurfaceColor);
 }
 
 .widget:active {
-  transform: scale(0.98);
+  transform: scale(0.96);
+  box-shadow:
+    0 12px 24px rgba(24, 119, 242, 0.22),
+    0 24px 48px rgba(28, 28, 30, 0.18);
 }
 
-/* Widget header styling */
+/* Widget header with subtle shadow and consistent padding */
 .widget-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem;
-  background-color: var(--primaryColor);
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--surfaceColor);
+  border-top-left-radius: var(--borderRadiusLarge);
+  border-top-right-radius: var(--borderRadiusLarge);
+  box-shadow: 0 1px 6px rgba(28, 28, 30, 0.08);
+  user-select: none;
 }
 
+/* Title with bigger icon spacing and clean font */
 .widget-title {
   display: flex;
   align-items: center;
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--onPrimaryColor);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--onSurfaceColor);
 }
 
 .widget-icon {
-  margin-right: 4px;
+  margin-right: 10px;
+  color: var(--primaryColor);
+  font-size: 1.6rem;
+  user-select: none;
 }
 
-/* Remove button styling */
+/* Remove button style: bigger tap area, color shift on hover */
 .widget-remove {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   cursor: pointer;
-  color: var(--onPrimaryColor);
-  margin-right: 4px;
+  color: var(--secondaryColor);
+  margin-right: 8px;
+  transition: color 0.3s ease, transform 0.15s ease;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Drag handle icon styling */
+.widget-remove:hover,
+.widget-remove:focus {
+  color: #E53935;
+  transform: scale(1.2);
+  outline: none;
+}
+
+.widget-remove:active {
+  transform: scale(1);
+}
+
+/* Drag handle: bigger, with grab cursor and color transition */
 .widget-drag-handle {
-  font-size: 2rem;
-  cursor: move;
-  color: var(--onPrimaryColor);
+  font-size: 2.2rem;
+  cursor: grab;
+  color: var(--secondaryColor);
+  transition: color 0.3s ease, transform 0.15s ease;
+  user-select: none;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.widget-drag-handle:hover,
+.widget-drag-handle:focus {
+  color: var(--primaryColor);
+  transform: scale(1.15);
+  outline: none;
+}
+
+.widget-drag-handle:active {
+  cursor: grabbing;
+  transform: scale(1);
 }
 
 /* Widget content styling */
 .widget-content {
-  padding: 1rem;
+  padding: 1.25rem 1.25rem 1.5rem 1.25rem;
   color: var(--onSurfaceColor);
+  font-weight: 400;
+  line-height: 1.5;
+  user-select: text;
 }
 
-/* Action button styling */
+/* Buttons with gradient, shadow, and smooth scaling */
 .action-btn {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primaryColor);
+  padding: 0.9rem 2rem;
+  background: linear-gradient(135deg, #1a62d8, #1877f2);
   border: none;
   color: var(--onPrimaryColor);
-  border-radius: 24px;
+  border-radius: var(--borderRadiusLarge);
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s ease;
+  font-size: 1.15rem;
+  font-weight: 600;
+  box-shadow:
+    0 6px 14px rgba(24, 119, 242, 0.4);
+  transition: background var(--transitionSpeed) ease, box-shadow var(--transitionSpeed) ease, transform 0.2s ease;
+  user-select: none;
+  user-drag: none;
 }
 
-.action-btn:hover {
-  background-color: var(--secondaryColor);
+.action-btn:hover,
+.action-btn:focus {
+  background: linear-gradient(135deg, #145dbf, #0f49a2);
+  box-shadow:
+    0 8px 18px rgba(20, 93, 191, 0.6);
+  transform: scale(1.05);
+  outline: none;
 }
 
-/* Modal styling */
+.action-btn:active {
+  transform: scale(0.97);
+}
+
+/* Modal with brighter translucent background and smooth border */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(18, 18, 18, 0.8);
+  background-color: rgba(242, 243, 247, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  backdrop-filter: saturate(180%) blur(18px);
 }
 
 .modal.hidden {
@@ -167,25 +295,29 @@ main {
 
 .modal-content {
   background-color: var(--surfaceColor);
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 3rem 3.5rem;
+  border-radius: var(--borderRadiusLarge);
+  box-shadow:
+    0 12px 36px rgba(28, 28, 30, 0.2);
   text-align: center;
-  width: 300px;
+  width: 350px;
+  color: var(--onSurfaceColor);
+  font-weight: 700;
+  user-select: none;
 }
 
 .widget-options {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  margin-top: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  gap: 1.25rem;
 }
 
 .widget-option {
-  width: 100px;
-  height: 100px;
-  margin: 0.5rem;
-  border-radius: 16px;
+  width: 120px;
+  height: 120px;
+  border-radius: var(--borderRadiusLarge);
   background-color: var(--widgetBackground);
   color: var(--onSurfaceColor);
   display: flex;
@@ -193,114 +325,103 @@ main {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--transitionSpeed) ease, color var(--transitionSpeed) ease, transform 0.3s ease;
+  font-weight: 600;
+  user-select: none;
+  box-shadow:
+    0 4px 12px rgba(24, 119, 242, 0.15),
+    0 8px 24px rgba(28, 28, 30, 0.1);
 }
 
-.widget-option:hover {
+.widget-option:hover,
+.widget-option:focus {
   background-color: var(--primaryColor);
   color: var(--onPrimaryColor);
+  transform: scale(1.1);
+  outline: none;
 }
 
 .widget-option i {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  font-size: 2.8rem;
+  margin-bottom: 0.85rem;
+  color: var(--primaryColor);
+  user-select: none;
 }
 
-/* Responsive Design for Mobile */
+/* Responsive for mobile */
 @media screen and (max-width: 768px) {
-  /* Adjust header styling for smaller screens */
   header {
     flex-wrap: wrap;
     justify-content: center;
-    padding: 0.5rem;
-    margin: 8px;
-    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 12px 8px;
+    border-radius: var(--borderRadiusMedium);
   }
 
   .logo {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
 
   .version {
-    font-size: 0.8rem;
-    padding: 4px;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
   }
 
   header .material-icons {
-    font-size: 1.6rem;
-    margin: 4px;
+    font-size: 2rem;
+    margin: 6px;
   }
 
-  /* Adjust main content layout */
   main {
     flex-direction: column;
     height: auto;
   }
 
   .editor-container {
-    padding: 0.5rem;
+    padding: 1.25rem 1.5rem;
   }
 
-  /* Make widgets smaller for better mobile interaction */
   .widget {
-    width: 140px;
-    padding: 0.4rem;
-    border-radius: 10px;
-    font-size: 0.85rem;
+    width: 240px;
+    padding: 1rem 1.25rem;
+    border-radius: var(--borderRadiusMedium);
+    font-size: 1rem;
+    position: static;
+    margin: 0.85rem auto;
   }
 
   .widget-header {
-    padding: 0.3rem;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    border-radius: var(--borderRadiusMedium);
   }
 
   .widget-title {
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
 
   .widget-icon {
-    font-size: 1.2rem;
-    margin-right: 3px;
+    font-size: 1.4rem;
+    margin-right: 6px;
   }
 
   .widget-remove,
   .widget-drag-handle {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   .widget-content {
-    padding: 0.4rem;
-  }
-
-  /* Ensure widgets remain draggable by adjusting positioning */
-  .widget {
-    min-width: 220px;
-    min-height: 80px;
-    touch-action: none;
-    position: static;
-    margin: 8px auto; /* center with margin */
+    padding: 0.8rem 1rem;
   }
 
   .widget-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* or center if you want vertical centering */
-    position: relative;
   }
 
-
-  /* Adjust button sizes */
   .action-btn {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-    border-radius: 16px;
-  }
-
-  .action-btn:hover {
-    background-color: var(--secondaryColor);
+    font-size: 1.1rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--borderRadiusMedium);
   }
 }
