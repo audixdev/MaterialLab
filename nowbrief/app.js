@@ -58,11 +58,30 @@ document.getElementById('changeNameBtn').onclick = () => {
   }
 };
 
-// Weather functions
+const weatherSummary = document.getElementById('weather-summary');
+const forecast = document.getElementById('forecast');
+
+// Show cached weather immediately if exists
+const cachedWeatherData = localStorage.getItem('weatherData');
+if (cachedWeatherData) {
+  displayWeather(JSON.parse(cachedWeatherData));
+} else {
+  weatherSummary.textContent = "Loading weather...";
+  forecast.innerHTML = '';
+}
+
 async function fetchWeather(lat, lon) {
-  const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${WEATHER_API_KEY}`);
-  const data = await res.json();
-  displayWeather(data);
+  try {
+    const res = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${WEATHER_API_KEY}`);
+    if (!res.ok) throw new Error('Weather fetch failed');
+    const data = await res.json();
+    localStorage.setItem('weatherData', JSON.stringify(data));
+    displayWeather(data);
+  } catch (err) {
+    weatherSummary.textContent = "Failed to load weather.";
+    forecast.innerHTML = '';
+    console.error(err);
+  }
 }
 
 function displayWeather(data) {
@@ -92,13 +111,64 @@ document.getElementById('unit-toggle').onclick = () => {
   location.reload();
 };
 
-// New fetch function using GNews
+const todoListEl = document.getElementById('todo-list');
+const todoForm = document.getElementById('todo-form');
+const todoInput = document.getElementById('todo-input');
+
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+function saveTodos() {
+  localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+function renderTodos() {
+  todoListEl.innerHTML = '';
+  todos.forEach((todo, index) => {
+    const taskEl = document.createElement('div');
+    taskEl.className = 'flex items-center justify-between bg-white/10 p-2 rounded';
+    taskEl.innerHTML = `
+      <label class="flex items-center gap-2 flex-grow cursor-pointer">
+        <input type="checkbox" ${todo.done ? 'checked' : ''} />
+        <span class="${todo.done ? 'line-through text-gray-400' : ''}">${todo.text}</span>
+      </label>
+      <button class="text-red-400 font-bold px-2">×</button>
+    `;
+    // Checkbox toggle
+    taskEl.querySelector('input').addEventListener('change', e => {
+      todos[index].done = e.target.checked;
+      saveTodos();
+      renderTodos();
+    });
+    // Delete button
+    taskEl.querySelector('button').addEventListener('click', () => {
+      todos.splice(index, 1);
+      saveTodos();
+      renderTodos();
+    });
+    todoListEl.appendChild(taskEl);
+  });
+}
+
+todoForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const text = todoInput.value.trim();
+  if (text) {
+    todos.push({ text, done: false });
+    saveTodos();
+    renderTodos();
+    todoInput.value = '';
+  }
+});
+
+// Initial render
+renderTodos();
+
 async function fetchNews() {
   try {
-    const res = await fetch(`https://gnews.io/api/v4/top-headlines?lang=nl&country=nl&max=3&token=${GNEWS_API_KEY}`);
+    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://feeds.nos.nl/nosnieuwsalgemeen`);
     const data = await res.json();
-    if (!data.articles) throw new Error("No articles found.");
-    displayNews(data.articles);
+    if (!data.items || !data.items.length) throw new Error("No news found.");
+    displayNews(data.items.slice(0, 3)); // limit to 3
   } catch (e) {
     console.error("News fetch failed:", e);
     document.getElementById('news-list').innerHTML = `
@@ -107,20 +177,27 @@ async function fetchNews() {
   }
 }
 
-// Display logic (already mostly good)
-function displayNews(articles) {
+function displayNews(items) {
   const container = document.getElementById('news-list');
   container.innerHTML = '';
-  articles.forEach(a => {
-    const el = document.createElement('div');
-    el.className = 'bg-white/5 p-2 rounded flex gap-2';
+
+  items.forEach(item => {
+    const imageUrl = item.thumbnail || (item.enclosure && item.enclosure.link) || 'https://via.placeholder.com/80';
+
+    const el = document.createElement('a');
+    el.href = item.link;
+    el.target = "_blank";
+    el.rel = "noopener noreferrer";
+    el.className = 'bg-white/5 p-2 rounded flex gap-2 hover:bg-white/10 transition';
+
     el.innerHTML = `
-      <img src="${a.image || 'https://via.placeholder.com/80'}" class="w-16 h-16 object-cover rounded" />
+      <img src="${imageUrl}" class="w-16 h-16 object-cover rounded" />
       <div>
-        <p class="text-sm font-medium">${a.title}</p>
-        <p class="text-xs text-gray-300">${a.source.name}</p>
+        <p class="text-sm font-medium">${item.title}</p>
+        <p class="text-xs text-gray-300">${new Date(item.pubDate).toLocaleDateString('nl-NL')}</p>
       </div>
     `;
+
     container.appendChild(el);
   });
 }
