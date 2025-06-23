@@ -9,7 +9,7 @@ const port = 3030;
 app.use(cors());
 app.use(bodyParser.json());
 
-const ai = new GoogleGenAI({ apiKey: process.env.GENAI_API_KEY }); // your API key here
+const ai = new GoogleGenAI({ apiKey: process.env.GENAI_API_KEY || "AIzaSyCi9_fCXSe7Dcxzg48PSvGMi-VwRYQU0Y0"}); // your API key here
 
 app.post('/api/ai', async (req, res) => {
   const { prompt } = req.body;
