@@ -1,5 +1,7 @@
 const WEATHER_API_KEY = '8b452084f73dfdd0a57fe89ebceef204';
-const NEWS_API_KEY = '06555db37dd444df93202010cc65e028';
+// const NEWS_API_KEY = '06555db37dd444df93202010cc65e028';
+// const CURRENTS_API_KEY = 'Mk2YCuu-txaH-CuFdWagZSXhsj_OsQHgWpCeVjGMoepEs8p-';
+const GNEWS_API_KEY = '974685a556b8b62796ec137952bbb284';
 
 let unit = localStorage.getItem('unit') || 'metric';
 let userName = localStorage.getItem('username') || '';
@@ -51,7 +53,7 @@ document.getElementById('startBtn').onclick = () => {
 document.getElementById('changeNameBtn').onclick = () => {
   const newName = prompt("Enter your name:");
   if (newName) {
-    localStorage.setItem('username', newName);
+    localStorage.setItem('username', newName);const CURRENTS_API_KEY = 'Mk2YCuu-txaH-CuFdWagZSXhsj_OsQHgWpCeVjGMoepEs8p-';
     location.reload();
   }
 };
@@ -90,13 +92,22 @@ document.getElementById('unit-toggle').onclick = () => {
   location.reload();
 };
 
-// News functions
+// New fetch function using GNews
 async function fetchNews() {
-  const res = await fetch(`https://newsapi.org/v2/top-headlines?country=us&pageSize=3&apiKey=${NEWS_API_KEY}`);
-  const data = await res.json();
-  displayNews(data.articles);
+  try {
+    const res = await fetch(`https://gnews.io/api/v4/top-headlines?lang=nl&country=nl&max=3&token=${GNEWS_API_KEY}`);
+    const data = await res.json();
+    if (!data.articles) throw new Error("No articles found.");
+    displayNews(data.articles);
+  } catch (e) {
+    console.error("News fetch failed:", e);
+    document.getElementById('news-list').innerHTML = `
+      <p class="text-sm text-gray-400">Unable to load news right now.</p>
+    `;
+  }
 }
 
+// Display logic (already mostly good)
 function displayNews(articles) {
   const container = document.getElementById('news-list');
   container.innerHTML = '';
@@ -104,7 +115,7 @@ function displayNews(articles) {
     const el = document.createElement('div');
     el.className = 'bg-white/5 p-2 rounded flex gap-2';
     el.innerHTML = `
-      <img src="${a.urlToImage || 'https://via.placeholder.com/80'}" class="w-16 h-16 object-cover rounded" />
+      <img src="${a.image || 'https://via.placeholder.com/80'}" class="w-16 h-16 object-cover rounded" />
       <div>
         <p class="text-sm font-medium">${a.title}</p>
         <p class="text-xs text-gray-300">${a.source.name}</p>
