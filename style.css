@@ -1,19 +1,20 @@
 :root {
-  --backgroundColor: #101010;
-  --surfaceColor: #1A1A1A;
-  --primaryColor: #FF3535;
-  --secondaryColor: #999999;
-  --onPrimaryColor: #ffffff;
-  --onSurfaceColor: #e0e0e0;
-  --widgetBackground: rgba(255, 255, 255, 0.04);
-  --blur: 10px;
+  --backgroundColor: #121212;
+  --surfaceColor: #1F1B24;
+  --primaryColor: #d3d3d3;
+  --secondaryColor: #777777;
+  --onPrimaryColor: #000000;
+  --onSurfaceColor: #ffffff;
+  --widgetBackground: rgba(40, 40, 40, 0.85);
+  --headerColor: rgba(31, 27, 36, 0.85);
 }
 
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  transition: all 0.25s ease;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body,
@@ -22,9 +23,12 @@ html {
   font-family: 'Inter', 'Roboto', 'OnePlus Sans', sans-serif;
   background-color: var(--backgroundColor);
   color: var(--onSurfaceColor);
-  overflow: hidden;
+  letter-spacing: 0.3px;
+  font-weight: 400;
+  transition: background-image 0.5s ease, background-color 0.5s ease;
 }
 
+/* Glassy OxygenOS-style header */
 header {
   display: flex;
   align-items: center;
@@ -32,62 +36,62 @@ header {
   margin: 16px;
   padding: 1rem;
   border-radius: 24px;
-  background-color: rgba(31, 27, 36, 0.85);
-  backdrop-filter: blur(var(--blur));
+  background-color: var(--headerColor);
+  backdrop-filter: blur(12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .logo {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
-.version {
-  font-size: 0.9rem;
-  margin-left: 1rem;
-}
-
-.material-symbols-rounded {
+header .material-icons {
   font-size: 2.2rem;
   padding: 8px;
-  margin: 0 4px;
-  cursor: pointer;
   border-radius: 50%;
+  cursor: pointer;
   transition: background-color 0.2s ease;
 }
-
-.material-symbols-rounded:hover {
+header .material-icons:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+/* Layout */
 main {
   display: flex;
-  height: calc(100vh - 100px);
+  height: calc(100vh - 80px);
 }
 
 .editor-container {
-  flex: 1;
+  flex: 2;
   position: relative;
-  overflow-y: auto;
+  background: transparent;
   padding: 1rem;
+  overflow-y: auto;
 }
 
 .widget-container {
   display: flex;
   flex-wrap: wrap;
+  gap: 1.5rem;
   justify-content: center;
   align-items: flex-start;
-  gap: 1.5rem;
+  padding-top: 1rem;
+  width: 100%;
+  height: 100%;
 }
 
+/* Card-style widget with blur + soft shadows */
 .widget {
-  position: relative;
-  width: 250px;
+  position: absolute;
   background-color: var(--widgetBackground);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
   border-radius: 24px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  width: 250px;
   user-select: none;
+  resize: both;
   transition: transform 0.2s ease;
 }
 
@@ -97,11 +101,11 @@ main {
 
 .widget-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: rgba(220, 220, 220, 0.9);
-  color: #000;
-  padding: 0.5rem 1rem;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: rgba(220, 220, 220, 0.9);
+  color: var(--onPrimaryColor);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
 }
@@ -109,7 +113,20 @@ main {
 .widget-title {
   display: flex;
   align-items: center;
+  font-size: 1rem;
   font-weight: bold;
+}
+
+.widget-icon {
+  margin-right: 4px;
+}
+
+.widget-remove,
+.widget-drag-handle {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--onPrimaryColor);
+  margin-right: 4px;
 }
 
 .widget-content {
@@ -117,86 +134,166 @@ main {
   color: var(--onSurfaceColor);
 }
 
-.widget-remove,
-.widget-drag-handle {
+/* Buttons */
+.action-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primaryColor);
+  border: none;
+  color: var(--onPrimaryColor);
+  border-radius: 24px;
   cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.action-btn:hover {
+  background-color: var(--secondaryColor);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transform: translateY(-2px);
 }
 
+/* Modal */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(16, 16, 16, 0.8);
-  backdrop-filter: blur(var(--blur));
+  background-color: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
 }
-
 .modal.hidden {
   display: none;
 }
-
 .modal-content {
   background-color: var(--surfaceColor);
   padding: 2rem;
   border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   text-align: center;
-  width: 320px;
+  width: 300px;
 }
 
+/* Widget creation options */
 .widget-options {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 1.5rem;
+  justify-content: space-around;
+  margin-top: 1rem;
 }
 
 .widget-option {
   width: 100px;
   height: 100px;
   margin: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
+  background-color: var(--widgetBackground);
+  color: var(--onSurfaceColor);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--onSurfaceColor);
   transition: background-color 0.2s ease;
 }
-
 .widget-option:hover {
   background-color: var(--primaryColor);
   color: var(--onPrimaryColor);
   animation: buttonPulse 0.3s ease;
 }
+.widget-option i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
 
+/* Pulse animation for hover */
 @keyframes buttonPulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  50% { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
 
-/* Mobile responsive */
+/* Mobile responsiveness */
 @media screen and (max-width: 768px) {
   header {
     flex-wrap: wrap;
     justify-content: center;
     padding: 0.5rem;
+    margin: 8px;
     border-radius: 16px;
   }
 
-  .widget {
-    width: 200px;
+  .logo {
+    font-size: 1.2rem;
   }
 
-  .modal-content {
-    width: 280px;
+  .version {
+    font-size: 0.8rem;
+    padding: 4px;
+  }
+
+  header .material-icons {
+    font-size: 1.6rem;
+    margin: 4px;
+  }
+
+  main {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .editor-container {
+    padding: 0.5rem;
+  }
+
+  .widget {
+    width: 140px;
+    padding: 0.4rem;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    position: static;
+    margin: 8px auto;
+    min-width: 220px;
+    min-height: 80px;
+    touch-action: none;
+  }
+
+  .widget-header {
+    padding: 0.3rem;
+    border-radius: 16px;
+  }
+
+  .widget-title {
+    font-size: 0.85rem;
+  }
+
+  .widget-icon {
+    font-size: 1.2rem;
+    margin-right: 3px;
+  }
+
+  .widget-remove,
+  .widget-drag-handle {
+    font-size: 1.2rem;
+  }
+
+  .widget-content {
+    padding: 0.4rem;
+  }
+
+  .widget-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+  }
+
+  .action-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 16px;
   }
 }
