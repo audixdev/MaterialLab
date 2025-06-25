@@ -6,7 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MaterialLab</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Material Icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
+  <meta name="theme-color" content="#101010" />
 </head>
 
 <body>
@@ -14,80 +17,54 @@
     <h1 class="logo">MaterialLab Playground</h1>
     <span class="version">v0.1.5-rc</span>
 
-    <!-- Existing buttons -->
-    <span class="material-icons" id="addWidget">add_circle</span>
-    <span class="material-icons" id="fileManager">upload_file</span>
-    <span class="material-icons" id="clearBackground">delete</span>
-    <span class="material-icons" id="documentationLink">help_outline</span>
-
-    <!-- New: Export Layout -->
-    <span class="material-icons" id="exportLayout" title="Export Layout">file_download</span>
-
-    <!-- New: Import Layout (triggers file input) -->
-    <span class="material-icons" id="importLayoutTrigger" title="Import Layout">file_upload</span>
+    <!-- Action Icons -->
+    <span class="material-symbols-rounded" id="addWidget">add_circle</span>
+    <span class="material-symbols-rounded" id="fileManager">upload_file</span>
+    <span class="material-symbols-rounded" id="clearBackground">delete</span>
+    <span class="material-symbols-rounded" id="documentationLink">help</span>
+    <span class="material-symbols-rounded" id="exportLayout" title="Export Layout">download</span>
+    <span class="material-symbols-rounded" id="importLayoutTrigger" title="Import Layout">upload</span>
     <input type="file" id="importLayoutInput" accept=".json" style="display: none;" />
-
-    <!-- Existing background input -->
     <input type="file" id="backgroundInput" accept="image/*" style="display: none;" />
   </header>
 
   <main>
     <section class="editor-container">
       <div id="widgetContainer" class="widget-container">
-        <!-- Example draggable widget (default type: weather) -->
-        <!-- <div class="widget" data-type="weather" id="widget1" style="left: 400px; top: 20px;">
-          <div class="widget-header">
-            <span class="widget-title">
-              <i class="material-icons widget-icon">wb_sunny</i>
-              Weather
-            </span>
-            <span class="material-icons widget-remove">delete</span>
-            <span class="material-icons widget-drag-handle">drag_indicator</span>
-          </div>
-          <div class="widget-content">
-            <p>25°C, Clear Sky</p>
-          </div>
-        </div> -->
+        <!-- Dynamic widgets appear here -->
       </div>
     </section>
   </main>
+
   <!-- Widget Picker Modal -->
   <div id="widgetPickerModal" class="modal hidden">
     <div class="modal-content">
       <h2>Select a Widget</h2>
       <div class="widget-options">
         <div class="widget-option" data-type="weather">
-          <i class="material-icons">wb_sunny</i>
-          <span>Weather</span>
+          <span class="material-symbols-rounded">sunny</span><span>Weather</span>
         </div>
         <div class="widget-option" data-type="clock">
-          <i class="material-icons">schedule</i>
-          <span>Clock</span>
+          <span class="material-symbols-rounded">schedule</span><span>Clock</span>
         </div>
         <div class="widget-option" data-type="battery">
-          <i class="material-icons">battery_full</i>
-          <span>Battery</span>
+          <span class="material-symbols-rounded">battery_full</span><span>Battery</span>
         </div>
         <div class="widget-option" data-type="quote">
-          <i class="material-icons">format_quote</i>
-          <span>Quote</span>
+          <span class="material-symbols-rounded">format_quote</span><span>Quote</span>
         </div>
         <div class="widget-option" data-type="todo">
-          <i class="material-icons">note_add</i>
-          <span>Todo List</span>
+          <span class="material-symbols-rounded">checklist</span><span>Todo</span>
         </div>
         <div class="widget-option" data-type="calendar">
-          <i class="material-icons">calendar_today</i>
-          <span>Calendar</span>
+          <span class="material-symbols-rounded">calendar_today</span><span>Calendar</span>
         </div>
         <div class="widget-option" data-type="custom">
-          <i class="material-icons">extension</i>
-          <span>Custom</span>
+          <span class="material-symbols-rounded">widgets</span><span>Custom</span>
         </div>
       </div>
     </div>
   </div>
-
 
   <script src="script.js"></script>
 </body>
