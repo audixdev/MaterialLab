@@ -5,7 +5,7 @@
   --secondaryColor: #777777;
   --onPrimaryColor: #000000;
   --onSurfaceColor: #ffffff;
-  --widgetBackground: rgba(40, 40, 40, 0.85);
+  --widgetBackground: rgba(40, 40, 40, 0.45);
   --headerColor: rgba(31, 27, 36, 0.85);
 }
 
@@ -53,6 +53,7 @@ header .material-icons {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
 header .material-icons:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -104,7 +105,7 @@ main {
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem;
-  background: rgba(220, 220, 220, 0.9);
+  background-color: var(--headerColor);
   color: var(--onPrimaryColor);
   border-top-left-radius: 24px;
   border-top-right-radius: 24px;
@@ -143,11 +144,12 @@ main {
   border-radius: 24px;
   cursor: pointer;
   font-size: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
+
 .action-btn:hover {
   background-color: var(--secondaryColor);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transform: translateY(-2px);
 }
 
@@ -165,9 +167,11 @@ main {
   justify-content: center;
   z-index: 1000;
 }
+
 .modal.hidden {
   display: none;
 }
+
 .modal-content {
   background-color: var(--surfaceColor);
   padding: 2rem;
@@ -199,11 +203,13 @@ main {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
 .widget-option:hover {
   background-color: var(--primaryColor);
   color: var(--onPrimaryColor);
   animation: buttonPulse 0.3s ease;
 }
+
 .widget-option i {
   font-size: 2rem;
   margin-bottom: 0.5rem;
@@ -211,9 +217,17 @@ main {
 
 /* Pulse animation for hover */
 @keyframes buttonPulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.04);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Mobile responsiveness */
